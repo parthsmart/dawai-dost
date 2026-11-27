@@ -1318,13 +1318,13 @@ function renderToday() {
     const m = medById(e.medId);
     let cls = e.status;
     if (e.status === 'pending' && atTime(e.date, e.time) <= tNow) cls = 'due';
-    const icon = cls === 'taken' ? '✓' : cls === 'missed' ? '✕' : '⏰';
     const st = cls === 'taken' ? L.stTaken : cls === 'missed' ? L.stMissed : cls === 'later' ? L.stLater : L.stLeft;
+    const mark = cls === 'taken' ? '✓' : cls === 'missed' ? '✕' : (cls === 'due' || cls === 'later') ? '!' : '';
     return `<button class="dose ${cls}" data-entry="${e.id}">
-      <span class="st-ic ${cls}">${icon}</span>
-      <span class="info"><span class="lbl">${esc(medLabel(m))}</span><br>
-      <span class="tm">${esc(L.at(L.slot[slotOf(e.time)], h12(e.time)))} · ${esc(L.dose(m.dose))}</span><br>
-      <span class="st">${esc(st)}</span></span>${pillHTML(m)}</button>`;
+      <span class="pocket ${cls}">${pillHTML(m)}<span class="mark" aria-hidden="true">${mark}</span></span>
+      <span class="info"><span class="tm">${esc(L.at(L.slot[slotOf(e.time)], h12(e.time)))}</span>
+      <span class="lbl">${esc(medLabel(m))} · ${esc(L.dose(m.dose))}</span>
+      <span class="st">${esc(st)}</span></span></button>`;
   }).join('');
   const key = html + L.today;
   if ($('todayList')._k !== key) { $('todayList').innerHTML = html || (S.meds.length ? `<div class="empty">${esc(L.noneToday)}</div>` : ''); $('todayList')._k = key; }
@@ -1391,6 +1391,7 @@ function renderStatic() {
   ['tabHome', 'tabMeds', 'tabFamily', 'tabSettings'].forEach((id, i) => $(id).textContent = L.tabs[i]);
   $('homeMicLabel').textContent = micAvailable() ? L.tapMic : L.micOff;
   $('offlineBar').textContent = L.offline; $('offlineBar').hidden = navigator.onLine;
+  $('homeHello').textContent = ({ hi: 'नमस्ते', mr: 'नमस्कार', ta: 'வணக்கம்', en: 'Namaste' })[S.lang] + ', ' + userName();
   if (!micAvailable() && $('homeQButtons').hidden) showHomeQ(true);
 }
 function renderAll() {
@@ -1408,7 +1409,7 @@ function showTab(name) {
   if (name === 'family') renderFamily();
   if (name === 'settings') renderSettings();
   if (name === 'home') renderToday();
-  window.scrollTo(0, 0);
+  window.scrollTo(0, 0); $('deviceScreen').scrollTop = 0;
 }
 let toastT = 0;
 function toast(msg) { const el = $('toast'); el.textContent = msg; el.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => el.hidden = true, 6000); }

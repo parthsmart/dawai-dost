@@ -3,24 +3,48 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#0B3D2E">
+<meta name="theme-color" content="#0F5C4C">
+<meta name="description" content="Dawai Dost: a voice-first medicine reminder for elderly people in India. Speak in Hindi, Tamil, Marathi or English.">
 <title>Dawai Dost</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect x='6' y='20' width='52' height='24' rx='12' fill='%230F5C4C'/%3E%3Cpath d='M32 20h14a12 12 0 0 1 0 24H32z' fill='%23F2A007'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@500;700;800&family=Noto+Sans+Devanagari:wght@500;700;800&family=Noto+Sans+Tamil:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700;800&family=Baloo+Thambi+2:wght@500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+<div class="stage">
+
+<!-- ============ DESKTOP: project intro for visitors ============ -->
+<aside class="pitch" aria-label="About Dawai Dost">
+  <div class="pitch-brand"><span class="logo" aria-hidden="true"></span>Dawai Dost</div>
+  <h1>Medicine reminders you can talk to.</h1>
+  <p class="pitch-hi">बोलिये, और दवाई याद रहेगी।</p>
+  <p>For elderly people in small-town India who find apps hard to type into. Describe your tablets once, out loud, in Hindi, Tamil, Marathi or English. At dose time Dawai Dost speaks up, listens for “kha li”, and tells the family on WhatsApp if a dose is missed.</p>
+  <h2>Try it in a minute</h2>
+  <ol class="pitch-steps">
+    <li>Tap <b>हिंदी</b> and allow the microphone.</li>
+    <li>Say a medicine: <i>“BP ki safed goli, subah ek, khane ke baad.”</i> Answer “haan” to save it.</li>
+    <li>Open <b>सेटिंग</b> and tap <b>अगली दवाई के समय पर जाएँ</b> to jump the clock to the dose.</li>
+    <li>Say <i>“kha li”</i>, or tap +30 min and watch the alert reach <b>परिवार</b>.</li>
+  </ol>
+  <p class="pitch-foot">Works best in Chrome. No microphone? Every question has a button, and you can type instead.<br>Speech by Wispr Flow or the browser, understanding by Claude or the built-in parser. Data stays on this device.</p>
+</aside>
+
+<div class="device">
+<div class="device-screen" id="deviceScreen">
 
 <!-- ============ FIRST LAUNCH: LANGUAGE ============ -->
-<section id="langScreen" class="screen-full" hidden>
+<section id="langScreen" class="screen-full lang-screen" hidden>
   <div class="lang-wrap">
-    <div class="brand-big"><span class="brand-pill"></span> Dawai Dost</div>
-    <p class="lang-q">अपनी भाषा चुनिये<br><span class="sub">Choose your language</span></p>
+    <div class="brand-big"><span class="logo" aria-hidden="true"></span>Dawai Dost</div>
+    <p class="lang-hello">नमस्ते · வணக்கம் · नमस्कार</p>
+    <p class="lang-q">अपनी भाषा चुनिये<span class="sub">Choose your language</span></p>
     <div class="lang-grid">
-      <button class="lang-btn default" data-lang="hi">हिंदी<span>Hindi</span></button>
-      <button class="lang-btn" data-lang="ta">தமிழ்<span>Tamil</span></button>
-      <button class="lang-btn" data-lang="mr">मराठी<span>Marathi</span></button>
-      <button class="lang-btn" data-lang="en">English<span>अंग्रेज़ी</span></button>
+      <button class="lang-btn default" data-lang="hi"><b>हिंदी</b><span>Hindi</span></button>
+      <button class="lang-btn" data-lang="ta"><b>தமிழ்</b><span>Tamil</span></button>
+      <button class="lang-btn" data-lang="mr"><b>मराठी</b><span>Marathi</span></button>
+      <button class="lang-btn" data-lang="en"><b>English</b><span>अंग्रेज़ी</span></button>
     </div>
     <button id="langMic" class="lang-mic" aria-label="Speak your language">
       <svg viewBox="0 0 24 24" class="ic"><path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V22h2v-3.08A7 7 0 0 0 19 12h-2Z"/></svg>
@@ -33,7 +57,7 @@
 <!-- ============ MAIN APP ============ -->
 <div id="app" hidden>
   <header class="topbar">
-    <div class="brand"><span class="brand-pill"></span><span id="brandName">Dawai Dost</span></div>
+    <div class="brand"><span class="logo" aria-hidden="true"></span><span id="brandName">Dawai Dost</span></div>
     <div id="clockChip" class="clock-chip"></div>
   </header>
   <div id="offlineBar" class="offline-bar" hidden></div>
@@ -41,11 +65,14 @@
   <main>
     <!-- HOME -->
     <section id="scr-home" class="scr">
+      <p class="hello" id="homeHello"></p>
+      <div class="mic-zone">
+        <button id="homeMic" class="mic-giant" aria-label="Mic">
+          <svg viewBox="0 0 24 24" class="ic"><path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V22h2v-3.08A7 7 0 0 0 19 12h-2Z"/></svg>
+        </button>
+        <div class="mic-label" id="homeMicLabel"></div>
+      </div>
       <div class="say-box" id="homeSay" aria-live="polite"></div>
-      <button id="homeMic" class="mic-giant" aria-label="Mic">
-        <svg viewBox="0 0 24 24" class="ic"><path d="M12 15a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v6a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V22h2v-3.08A7 7 0 0 0 19 12h-2Z"/></svg>
-      </button>
-      <div class="mic-label" id="homeMicLabel"></div>
       <p class="heard" id="homeHeard"></p>
       <div id="homeQButtons" class="q-buttons" hidden></div>
       <h2 class="sec-title" id="todayTitle"></h2>
@@ -86,10 +113,21 @@
         </div>
       </div>
 
-      <div class="card">
-        <h3 id="setNamesH"></h3>
-        <label><span id="lblUserName"></span><input id="inUserName" type="text"></label>
-        <label><span id="lblFamCalls"></span><input id="inFamCalls" type="text"></label>
+      <div class="card test-clock">
+        <h3 id="setClockH"></h3>
+        <div class="clock-now" id="clockNow"></div>
+        <button id="btnNextDose" class="btn-mid btn-accent"></button>
+        <div class="row wrap chips">
+          <button class="btn-mid" data-add="1">+1 min</button>
+          <button class="btn-mid" data-add="2">+2 min</button>
+          <button class="btn-mid" data-add="15">+15 min</button>
+          <button class="btn-mid" data-add="30">+30 min</button>
+        </div>
+        <div class="row">
+          <input id="inClock" type="time" aria-label="Time">
+          <button id="btnSetClock" class="btn-mid"></button>
+        </div>
+        <button id="btnRealTime" class="btn-mid"></button>
       </div>
 
       <div class="card">
@@ -98,23 +136,10 @@
         <label><span id="lblFamPhone"></span><input id="inFamPhone" type="tel" inputmode="tel" autocomplete="off"></label>
       </div>
 
-      <div class="card test-clock">
-        <h3 id="setClockH"></h3>
-        <div class="clock-now" id="clockNow"></div>
-        <div class="row">
-          <input id="inClock" type="time">
-          <button id="btnSetClock" class="btn-mid"></button>
-        </div>
-        <div class="row wrap">
-          <button class="btn-mid" data-add="1">+1 min</button>
-          <button class="btn-mid" data-add="2">+2 min</button>
-          <button class="btn-mid" data-add="15">+15 min</button>
-          <button class="btn-mid" data-add="30">+30 min</button>
-        </div>
-        <div class="row wrap">
-          <button id="btnNextDose" class="btn-mid btn-accent"></button>
-          <button id="btnRealTime" class="btn-mid"></button>
-        </div>
+      <div class="card">
+        <h3 id="setNamesH"></h3>
+        <label><span id="lblUserName"></span><input id="inUserName" type="text"></label>
+        <label><span id="lblFamCalls"></span><input id="inFamCalls" type="text"></label>
       </div>
 
       <div class="card">
@@ -122,20 +147,18 @@
         <p class="hint" id="voiceHint"></p>
         <label><span>Wispr Flow API key</span><input id="inWispr" type="password" autocomplete="off" placeholder="platform.wisprflow.ai"></label>
         <label><span>Claude API key</span><input id="inClaude" type="password" autocomplete="off" placeholder="console.anthropic.com"></label>
-        <p class="hint" id="engineStatus"></p>
+        <p class="hint engine" id="engineStatus"></p>
       </div>
 
-      <div class="card">
-        <button id="btnReset" class="btn-mid btn-danger"></button>
-      </div>
+      <button id="btnReset" class="btn-mid btn-danger"></button>
     </section>
   </main>
 
   <nav class="tabs">
-    <button data-tab="home" class="on"><svg viewBox="0 0 24 24" class="ic"><path d="M12 3 2 12h3v8h5v-6h4v6h5v-8h3L12 3Z"/></svg><span id="tabHome"></span></button>
-    <button data-tab="meds"><svg viewBox="0 0 24 24" class="ic"><path d="M4.2 10.1a5 5 0 0 1 7.1-7.1l9.7 9.7a5 5 0 0 1-7.1 7.1l-9.7-9.7Zm1.4 1.4 4.3 4.3 5.9-5.9-4.3-4.3a3 3 0 0 0-4.2 0l-1.7 1.7a3 3 0 0 0 0 4.2Z"/></svg><span id="tabMeds"></span></button>
-    <button data-tab="family"><svg viewBox="0 0 24 24" class="ic"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.2 14.1c-.2.6-1.3 1.2-1.8 1.2-.5.1-1 .1-3.3-.8a11 11 0 0 1-4.3-3.9c-.3-.5-1-1.5-1-2.8s.7-2 1-2.3c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.9 2c.1.2.1.4 0 .6l-.4.6-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.6 2 1.1 1 2 1.3 2.3 1.4.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.7-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3Z"/></svg><span id="tabFamily"></span><b id="famBadge" class="badge" hidden></b></button>
-    <button data-tab="settings"><svg viewBox="0 0 24 24" class="ic"><path d="M19.4 13a7.6 7.6 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.4 7.4 0 0 0-1.7-1L15 3h-4l-.4 2.7a7.4 7.4 0 0 0-1.7 1l-2.5-1-2 3.5L6.6 11a7.6 7.6 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1c.5.4 1.1.7 1.7 1L11 21h4l.4-2.7c.6-.3 1.2-.6 1.7-1l2.5 1 2-3.5-2.2-1.8ZM13 15.5A3.5 3.5 0 1 1 13 8.5a3.5 3.5 0 0 1 0 7Z"/></svg><span id="tabSettings"></span></button>
+    <button data-tab="home" class="on"><span class="tab-ic"><svg viewBox="0 0 24 24" class="ic"><path d="M12 3 2 12h3v8h5v-6h4v6h5v-8h3L12 3Z"/></svg></span><span id="tabHome"></span></button>
+    <button data-tab="meds"><span class="tab-ic"><svg viewBox="0 0 24 24" class="ic"><path d="M4.2 10.1a5 5 0 0 1 7.1-7.1l9.7 9.7a5 5 0 0 1-7.1 7.1l-9.7-9.7Zm1.4 1.4 4.3 4.3 5.9-5.9-4.3-4.3a3 3 0 0 0-4.2 0l-1.7 1.7a3 3 0 0 0 0 4.2Z"/></svg></span><span id="tabMeds"></span></button>
+    <button data-tab="family"><span class="tab-ic"><svg viewBox="0 0 24 24" class="ic"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm5.2 14.1c-.2.6-1.300 1.2-1.8 1.2-.5.1-1 .1-3.3-.8a11 11 0 0 1-4.3-3.9c-.3-.5-1-1.5-1-2.8s.7-2 1-2.300c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.9 2c.1.2.1.4 0 .6l-.4.6-.4.4c-.1.2-.3.3-.1.6.2.3.8 1.3 1.6 2 1.1 1 2 1.3 2.3 1.4.3.1.5.1.6-.1l.9-1c.2-.3.4-.2.7-.1l1.9.9c.3.1.5.2.5.3.1.2.1.7-.1 1.3Z"/></svg><b id="famBadge" class="badge" hidden></b></span><span id="tabFamily"></span></button>
+    <button data-tab="settings"><span class="tab-ic"><svg viewBox="0 0 24 24" class="ic"><path d="M19.4 13a7.6 7.6 0 0 0 0-2l2.1-1.6-2-3.5-2.5 1a7.4 7.4 0 0 0-1.7-1L15 3h-4l-.4 2.7a7.4 7.4 0 0 0-1.7 1l-2.5-1-2 3.5L6.6 11a7.6 7.6 0 0 0 0 2l-2.1 1.6 2 3.5 2.5-1c.5.4 1.1.7 1.7 1L11 21h4l.4-2.7c.6-.3 1.2-.6 1.7-1l2.5 1 2-3.5-2.2-1.8ZM13 15.5A3.5 3.5 0 1 1 13 8.5a3.5 3.5 0 0 1 0 7Z"/></svg></span><span id="tabSettings"></span></button>
   </nav>
 </div>
 
@@ -146,7 +169,7 @@
     <button id="talkClose" class="x" aria-label="Close">✕</button>
   </div>
   <div class="talk-body">
-    <div class="say-box big" id="talkSay" aria-live="polite"></div>
+    <div class="say-box" id="talkSay" aria-live="polite"></div>
     <div id="talkCard"></div>
     <p class="heard" id="talkHeard"></p>
   </div>
@@ -157,7 +180,7 @@
     <div id="talkButtons" class="talk-buttons"></div>
     <form id="talkTypeForm" class="type-form" hidden>
       <input id="talkType" type="text" autocomplete="off">
-      <button class="btn-mid btn-primary" type="submit">➜</button>
+      <button class="btn-mid btn-primary" type="submit" aria-label="Send">➜</button>
     </form>
     <button id="talkTypeToggle" class="link-btn"></button>
   </div>
@@ -166,7 +189,7 @@
 <!-- ============ REMINDER (full screen) ============ -->
 <section id="reminder" class="screen-full reminder" hidden>
   <div class="rem-time" id="remTime"></div>
-  <div class="rem-pill-wrap"><div id="remPill"></div></div>
+  <div class="rem-pocket"><div id="remPill"></div></div>
   <div class="rem-label" id="remLabel"></div>
   <div class="rem-food" id="remFood"></div>
   <div class="say-box" id="remSay" aria-live="assertive"></div>
@@ -178,7 +201,7 @@
     <button id="remLater" class="btn-huge btn-later"><span class="bi">⏰</span><span id="remLaterTxt"></span></button>
   </div>
   <div class="rem-demo">
-    <span>Test clock:</span>
+    <span>Test clock</span>
     <button data-add="2">+2 min</button>
     <button data-add="15">+15 min</button>
     <button data-add="30">+30 min</button>
@@ -187,6 +210,9 @@
 
 <div id="toast" class="toast" hidden></div>
 
+</div>
+</div>
+</div>
 <script src="app.js"></script>
 </body>
 </html>
